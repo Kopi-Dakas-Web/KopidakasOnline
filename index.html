@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#007FFF">
+<title>KOPI DAKAS</title>
+<style>
+/* KOPI DAKAS - style.css */
+:root{--b:#007FFF;--d:#0052cc;--l:#eaf4ff;--t:#10243e}
+*{box-sizing:border-box;margin:0}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid #ffb800;outline-offset:2px}
+body{font-family:system-ui,"Segoe UI",Roboto,sans-serif;background:var(--l);color:var(--t);padding:56px 0 66px}
+header{position:fixed;top:0;left:0;right:0;height:56px;background:linear-gradient(90deg,var(--d),var(--b));display:flex;align-items:center;padding:0 14px;z-index:5;box-shadow:0 2px 10px #0003}
+.logo{height:40px;width:auto}
+main{max-width:1000px;margin:auto;padding:14px}
+h1{font-size:2.2rem;margin-top:12px}h2,h3{margin:16px 0 8px}
+.tag{color:var(--d);font-style:italic;margin-bottom:8px}
+.page{display:none}
+.page.on{display:block;animation:in .35s ease-out}
+@keyframes in{from{opacity:0;transform:translateY(14px)}}
+.banner{width:100%;height:auto;border-radius:16px;display:block}
+.card{background:#fff;border-radius:14px;padding:14px;margin:10px 0;box-shadow:0 2px 10px #0a3d7a22}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
+.grid .card{margin:0}
+.pc{text-align:center;transition:transform .2s}
+.pc:hover{transform:translateY(-3px)}
+.pc img{width:100%;aspect-ratio:1;object-fit:contain}
+.pc p{font-size:.85rem;min-height:1.2em}
+.coffee{border-top:5px solid var(--b)}
+.non{border-top:5px solid #19b394}
+.lit{border-top:5px solid #0b1f4d;background:#f3f8ff}
+.btn{display:block;width:100%;margin-top:8px;padding:11px;border:0;border-radius:12px;background:var(--b);color:#fff;font:inherit;font-weight:700;text-align:center;text-decoration:none;cursor:pointer;transition:transform .15s}
+.btn:active{transform:scale(.95)}
+.btn.o{background:#fff;color:var(--b);border:2px solid var(--b)}
+.btn.wa{background:#1fa855}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+input,select,textarea{width:100%;padding:11px;margin:5px 0;border:1px solid #b8d4f0;border-radius:10px;font:inherit;background:#fff}
+textarea{min-height:80px}
+.row label{display:inline-block;margin-right:14px}
+.row input{width:auto;margin-right:4px}
+.ci{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ci img{width:64px;height:64px;object-fit:contain}
+.ci>div:nth-child(2){flex:1;min-width:130px}
+.qty{display:flex;gap:4px;align-items:center}
+.qty button{width:36px;height:40px;border:0;border-radius:8px;background:var(--l);font-size:1.1rem}
+.qty input{width:60px;text-align:center;margin:0}
+.ok{border-left:6px solid #19b394}
+.bad{border-left:6px solid #e53935}
+.qr{width:230px;max-width:100%;display:block;margin:8px auto}
+.pts h1{color:var(--b);margin:0}
+.bar{height:10px;background:var(--l);border-radius:9px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;background:var(--b);transition:width .6s}
+li{margin-left:18px;margin-bottom:4px}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;box-shadow:0 -2px 12px #0003;z-index:6}
+nav button{flex:1;border:0;background:none;padding:7px 0;font:inherit;font-size:.68rem;color:#5a6b80;position:relative}
+nav button span{display:block;font-size:1.3rem}
+nav button.on{color:var(--b);font-weight:700}
+#bd{position:absolute;top:2px;right:16%;background:#e53935;color:#fff;border-radius:9px;font-size:.65rem;padding:0 5px}
+#bd:empty{display:none}
+footer{background:linear-gradient(90deg,var(--d),var(--b));color:#fff;text-align:center;padding:22px 14px;margin-top:20px}
+footer img{height:64px;width:auto}
+footer p{margin-top:8px;font-size:.85rem}
+#toast{position:fixed;bottom:84px;left:50%;transform:translate(-50%,16px);background:var(--t);color:#fff;padding:10px 16px;border-radius:20px;opacity:0;transition:.3s;z-index:30;pointer-events:none;max-width:90%;text-align:center}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+#loader,#offline{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,var(--d),var(--b));color:#fff;z-index:50;transition:opacity .6s,visibility .6s}
+#loader img{width:240px;max-width:70%;animation:pulse 1.4s infinite}
+#loader h2{animation:in 1s .4s both}
+#loader.off{opacity:0;visibility:hidden}
+#offline{z-index:60;font-size:1.4rem;text-align:center;padding:20px}
+#offline p{animation:bob 1.2s infinite}
+@keyframes pulse{50%{transform:scale(1.07)}}
+@keyframes bob{50%{transform:translateY(-10px)}}
+@media(min-width:768px){
+  body{padding-bottom:0}
+  header{padding:0 28px}
+  nav{top:0;bottom:auto;left:auto;width:auto;height:56px;background:none;box-shadow:none}
+  nav button{color:#fff;padding:0 14px;font-size:.85rem}
+  nav button span{display:inline;font-size:1rem;margin-right:4px}
+  nav button.on{color:#fff;border-bottom:3px solid #fff}
+  #bd{position:static;margin-left:5px}
+  #toast{bottom:20px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js"></script>
+</head>
+<body>
+
+<div id="loader"><img src="assets/logo.png" alt="KOPI DAKAS"><h2>Selamat Datang</h2></div>
+<div id="offline" hidden><p>Yah maaf sinyal anda bermasalah :)</p></div>
+
+<header><img class="logo" src="assets/logo.png" alt="KOPI DAKAS"></header>
+
+<nav>
+  <button data-go="home"><span>🏠</span>Home</button>
+  <button data-go="menu"><span>☕</span>Menu</button>
+  <button data-go="cart"><span>🛒</span>Keranjang<b id="bd"></b></button>
+  <button data-go="orders"><span>🧾</span>Pesanan</button>
+  <button data-go="member"><span>⭐</span>Member</button>
+  <button data-go="profile"><span>👤</span>Profil</button>
+</nav>
+
+<main>
+  <section class="page" id="home">
+    <img class="banner" src="assets/banner.png" alt="Banner KOPI DAKAS">
+    <h1>KOPI DAKAS</h1>
+    <p class="tag">Yang paling memahami</p>
+    <div class="card">🎁 <b>Beli 10 cup gratis 1 cup</b> untuk menu reguler (di luar literan).</div>
+    <div class="card">📍 Simpang BLK (depan Miniso)<br>👤 Sales: Rafi Taufiq</div>
+    <button class="btn" data-go="menu">Lihat menu</button>
+  </section>
+
+  <section class="page" id="menu"></section>
+
+  <section class="page" id="cart">
+    <h2>Keranjang</h2>
+    <div id="cartList"></div>
+    <div id="sum" class="card" hidden></div>
+    <form id="coForm" class="card" hidden>
+      <h3>Data pemesan</h3>
+      <input id="cName" placeholder="Nama lengkap" autocomplete="name" required>
+      <input id="cPhone" placeholder="Nomor WhatsApp, contoh 0895..." inputmode="tel" required>
+      <div class="row">
+        <label><input type="radio" name="m" id="pk" value="Pickup" checked> Pickup</label>
+        <label><input type="radio" name="m" id="dl" value="Delivery"> Delivery (min. 2 cup)</label>
+      </div>
+      <textarea id="cAddr" placeholder="Alamat pengantaran lengkap" hidden></textarea>
+      <button class="btn">Buat pesanan</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+  <section class="page" id="orders"><h2>Pesanan</h2><div id="orderList"></div></section>
+  <section class="page" id="member"></section>
+  <section class="page" id="profile"></section>
+</main>
+
+<footer>
+  <img src="assets/logo.png" alt="KOPI DAKAS">
+  <p>Simpang BLK (depan Miniso)<br>Sales: Rafi Taufiq, WhatsApp 0895385540902</p>
+</footer>
+
+<div id="toast"></div>
+<script>
+/* KOPI DAKAS - script.js
+   Prototipe lokal: semua data disimpan di LocalStorage browser ini
+   (bisa diubah/dihapus pengguna, tidak sinkron antarperangkat). */
+
+/* ===== 1. KONFIGURASI & DATA PRODUK (mudah diedit) ===== */
+const CFG = {
+  wa: '62895385540902',             // nomor sales (format 62)
+  minDelivery: 2,                   // minimal cup untuk delivery
+  poinPerOrder: 10,                 // poin tiap transaksi
+  biayaReward: 100,                 // poin untuk 1 cup gratis
+  promo: { beli: 10, gratis: 1 },   // beli 10 gratis 1 (menu reguler saja)
+  mail: { service: 'service_47tdmcf', template: 'template_4nhjmuw', key: 'Go6ujB8aeGCmXL8I9', to: 'rafitaufiqulhakim05@gmail.com' }
+};
+// Harga literan: ganti angkanya. Isi null = belum bisa dibeli.
+const LITERAN = { 500: 45000, 1000: 90000 };
+const RASA = [['Klasik','klasik.png'],['Strong','strong.png'],['Soft','soft.png'],['Coldbrew Peach','peach.png'],['Matcha','matcha.png'],['Chocolate','chocolate.png']];
+const PRODUK = [
+  { id:'klasik',    nama:'KOPI DAKAS KLASIK', kat:'coffee', harga:13000, desc:'Double Shot Espresso.',  img:'klasik.png' },
+  { id:'strong',    nama:'KOPI SUSU STRONG',  kat:'coffee', harga:13000, desc:'Balance Flavor.',        img:'strong.png' },
+  { id:'soft',      nama:'KOPI SUSU SOFT',    kat:'coffee', harga:13000, desc:'Balance Sweet Flavor.',  img:'soft.png' },
+  { id:'peach',     nama:'COLDBREW PEACH',    kat:'coffee', harga:15000, desc:'Coffee Series',          img:'peach.png' },
+  { id:'matcha',    nama:'MATCHA',            kat:'non',    harga:13000, desc:'Non-Coffee Series',      img:'matcha.png' },
+  { id:'chocolate', nama:'CHOCOLATE',         kat:'non',    harga:13000, desc:'Non-Coffee Series',      img:'chocolate.png' }
+];
+
+/* ===== 2. UTILITAS ===== */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const rp = n => 'Rp' + Number(n || 0).toLocaleString('id-ID');
+const esc = s => String(s).replace(/[&<>"']/g, c => '&#' + c.charCodeAt(0) + ';');
+const fmt = t => new Date(t).toLocaleString('id-ID');
+const HP = /^(\+62|62|0)8\d{7,12}$/;
+let tmr;
+function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(tmr); tmr = setTimeout(() => t.classList.remove('on'), 2300); }
+
+/* ===== 3. PENYIMPANAN (LocalStorage) ===== */
+let DB; try { DB = JSON.parse(localStorage.getItem('kd_db')); } catch (e) {}
+DB = DB && DB.users ? DB : { users: {}, session: null, guest: [], cart: [] };
+DB.cart = (DB.cart || []).filter(c => c.pid === 'lit' || PRODUK.some(p => p.id === c.pid));
+const save = () => localStorage.setItem('kd_db', JSON.stringify(DB));
+const me = () => DB.users[DB.session] || null;
+const myOrders = () => me() ? me().orders : DB.guest;
+const findOrder = id => [...DB.guest, ...Object.values(DB.users).flatMap(u => u.orders)].find(o => o.id === id);
+
+/* ===== 4. KERANJANG & PERHITUNGAN HARGA ===== */
+function info(c) {
+  if (c.pid === 'lit') {
+    const r = RASA.find(x => x[0] === c.rasa) || RASA[0];
+    return { nama: 'LITERAN ' + c.ukuran + ' ml', varian: r[0], ukuran: c.ukuran + ' ml', harga: LITERAN[c.ukuran], img: r[1], reg: false };
+  }
+  const p = PRODUK.find(x => x.id === c.pid);
+  return { nama: p.nama, varian: p.nama, ukuran: 'Reguler', harga: p.harga, img: p.img, reg: true };
+}
+const badge = () => { $('#bd').textContent = DB.cart.reduce((a, c) => a + c.qty, 0) || ''; };
+function tambah(c, q = 1) {
+  if (!(info(c).harga > 0)) { toast('Harga belum ditentukan, belum bisa dibeli'); return false; }
+  const k = [c.pid, c.rasa, c.ukuran].join('|'), f = DB.cart.find(x => x.k === k);
+  if (f) f.qty = Math.min(999, f.qty + q); else DB.cart.push({ ...c, k, qty: q });
+  save(); badge(); return true;
+}
+// Promo dihitung ulang dari isi keranjang setiap kali (tidak pernah dobel).
+// Bonus = cup reguler termurah; literan tidak ikut promo.
+function hitung() {
+  let unit = 0, sub = 0; const reg = [];
+  DB.cart.forEach(c => {
+    const i = info(c); if (!(i.harga > 0)) return;
+    unit += c.qty; sub += i.harga * c.qty;
+    if (i.reg) for (let n = 0; n < c.qty; n++) reg.push(i.harga);
+  });
+  const bonus = Math.floor(reg.length / (CFG.promo.beli + CFG.promo.gratis)) * CFG.promo.gratis;
+  const diskon = reg.sort((a, b) => a - b).slice(0, bonus).reduce((a, b) => a + b, 0);
+  return { unit, jenis: DB.cart.length, sub, bonus, diskon, total: Math.max(0, sub - diskon), reg: reg.length };
+}
+
+/* ===== 5. POIN & REWARD ===== */
+function beriPoin(u, o) { // 10 poin, hanya sekali per ID transaksi
+  if (o.poin || u.plog.some(l => l.ref === o.id)) return;
+  o.poin = true; u.points += CFG.poinPerOrder;
+  u.plog.push({ t: Date.now(), ref: o.id, d: CFG.poinPerOrder, note: 'Transaksi ' + o.id });
+}
+function tukar(pid) {
+  const u = me(), p = PRODUK.find(x => x.id === pid);
+  if (!u || !p) return;
+  if (u.points < CFG.biayaReward) return toast('Poin belum cukup');
+  u.points -= CFG.biayaReward;
+  const r = { id: 'RW' + Date.now().toString(36).toUpperCase(), t: Date.now(), item: p.nama };
+  u.rewards.unshift(r);
+  u.plog.push({ t: r.t, ref: r.id, d: -CFG.biayaReward, note: 'Tukar reward ' + p.nama });
+  save(); renderMember(); toast('Reward berhasil: 1 cup ' + p.nama + ' (' + r.id + ')');
+}
+async function hash(s) {
+  try { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); }
+  catch (e) { let h = 5381; for (const ch of s) h = (h * 33 ^ ch.charCodeAt(0)) >>> 0; return 'f' + h; }
+}
+
+/* ===== 6. EMAIL KE SALES (EmailJS) ===== */
+async function kirimEmail(o) {
+  const u = Object.values(DB.users).find(x => x.orders.includes(o));
+  const p = {
+    to_email: CFG.mail.to, order_id: o.id, order_time: fmt(o.time),
+    customer_name: o.nama, customer_phone: o.hp,
+    member_info: u ? u.name + ' (' + u.email + ')' : 'Tamu (bukan member)',
+    order_method: o.metode, address: o.alamat || '-',
+    items_html: o.items.map(i => `<tr><td>${esc(i.nama)} (${esc(i.varian)}, ${esc(i.ukuran)})</td><td align="center">${i.qty}</td><td align="right">${rp(i.harga * i.qty)}</td></tr>`).join(''),
+    total_units: o.unit, subtotal: rp(o.sub),
+    promo_info: o.bonus ? `Bonus ${o.bonus} cup gratis (-${rp(o.diskon)})` : 'Tidak ada promo',
+    total: rp(o.total), payment_method: 'QRIS', payment_status: o.bayar, order_status: o.status
+  };
+  try { const r = await emailjs.send(CFG.mail.service, CFG.mail.template, p, { publicKey: CFG.mail.key }); o.mail = r.status === 200; }
+  catch (e) { o.mail = false; }
+  save(); return o.mail;
+}
+const wa = o => 'https://wa.me/' + CFG.wa + '?text=' + encodeURIComponent(
+  'Halo Kak Rafi, pesanan KOPI DAKAS\nID: ' + o.id + '\n' +
+  o.items.map(i => i.qty + 'x ' + i.nama + ' (' + i.varian + ', ' + i.ukuran + ')').join('\n') +
+  '\nTotal: ' + rp(o.total) + '\nMetode: ' + o.metode);
+
+/* ===== 7. TAMPILAN HALAMAN ===== */
+const kartu = p => `<div class="card pc ${p.kat}"><img src="assets/${p.img}" alt="${p.nama}"><h3>${p.nama}</h3><p>${p.desc}</p><b>${rp(p.harga)}</b><button class="btn" data-add="${p.id}">Tambahkan ke Keranjang</button><button class="btn o" data-buy="${p.id}">Beli Sekarang</button></div>`;
+function renderMenu() {
+  const grup = k => PRODUK.filter(p => p.kat === k).map(kartu).join('');
+  $('#menu').innerHTML =
+    `<h2>Coffee Series</h2><div class="grid">${grup('coffee')}</div>
+     <h2>Non-Coffee Series</h2><div class="grid">${grup('non')}</div>
+     <h2>Literan Series</h2>
+     <div class="card lit">
+       <label>Rasa<select id="lr">${RASA.map(r => `<option>${r[0]}</option>`).join('')}</select></label>
+       <label>Ukuran<select id="lu">${Object.keys(LITERAN).map(u => `<option value="${u}">${u} ml - ${LITERAN[u] ? rp(LITERAN[u]) : 'harga belum ditentukan'}</option>`).join('')}</select></label>
+       <button class="btn" data-lit="add">Tambahkan ke Keranjang</button>
+       <button class="btn o" data-lit="buy">Beli Sekarang</button>
+     </div>`;
+}
+function renderCart() {
+  $('#cartList').innerHTML = DB.cart.length ? DB.cart.map((c, i) => {
+    const n = info(c);
+    return `<div class="card ci"><img src="assets/${n.img}" alt=""><div><b>${n.nama}</b><br><small>${esc(n.varian)}, ${n.ukuran}</small><br>${rp(n.harga)}</div><div class="qty"><button data-dec="${i}" aria-label="Kurangi">−</button><input type="number" min="1" max="999" value="${c.qty}" data-q="${i}" aria-label="Jumlah"><button data-inc="${i}" aria-label="Tambah">+</button><button data-del="${i}" aria-label="Hapus">🗑</button></div></div>`;
+  }).join('') : '<div class="card">Keranjang masih kosong. Pilih menu dulu ya 🛒</div>';
+  const t = hitung();
+  $('#sum').innerHTML = `Total unit: <b>${t.unit}</b>, jenis produk: <b>${t.jenis}</b><br>Subtotal: ${rp(t.sub)}<br>` +
+    (t.bonus ? `🎁 Promo: bonus ${t.bonus} cup gratis (-${rp(t.diskon)})`
+             : `Promo beli ${CFG.promo.beli} gratis ${CFG.promo.gratis}: butuh ${CFG.promo.beli + CFG.promo.gratis} cup reguler (sekarang ${t.reg}, literan tidak ikut)`) +
+    `<h3>Total: ${rp(t.total)}</h3>`;
+  $('#sum').hidden = $('#coForm').hidden = !DB.cart.length;
+  const ok = t.unit >= CFG.minDelivery, dl = $('#dl');
+  dl.disabled = !ok; if (!ok) $('#pk').checked = true;
+  $('#cAddr').hidden = !(dl.checked && ok);
+  const u = me();
+  if (u) { if (!$('#cName').value) $('#cName').value = u.name; if (!$('#cPhone').value) $('#cPhone').value = u.phone || ''; }
+}
+function showResult(o) {
+  const R = $('#result'); R.dataset.id = o.id;
+  R.innerHTML = `<div class="card ${o.mail ? 'ok' : 'bad'}">
+    <h3>${o.mail ? 'Terima kasih telah order di KOPI DAKAS, pesanan Anda telah diterima oleh sales 😊' : 'Pesanan tercatat, tetapi email ke sales GAGAL terkirim.'}</h3>
+    <p>ID pesanan: <b>${o.id}</b><br>Total: <b>${rp(o.total)}</b><br>Status pembayaran: ${o.bayar}</p>
+    ${o.mail ? '' : `<button class="btn" data-retry="${o.id}">Coba kirim ulang email</button>`}
+    <p>Bayar dengan QRIS:</p><img class="qr" src="assets/qr.png" alt="QRIS KOPI DAKAS">
+    ${o.bayar === 'Menunggu Pembayaran' ? `<button class="btn o" data-paid="${o.id}">Saya sudah bayar (minta verifikasi)</button>` : ''}
+    <a class="btn wa" target="_blank" rel="noopener" href="${wa(o)}">Chat WhatsApp sales (opsional)</a></div>`;
+}
+function renderOrders() {
+  const u = me(), os = myOrders();
+  $('#orderList').innerHTML = (u ? '' : '<div class="card">Kamu belum login. Pesanan tamu tidak mendapat poin; login di menu Member.</div>') +
+    (os.length ? os.map(o => `<div class="card"><b>${o.id}</b><br><small>${fmt(o.time)}</small>
+      <ul>${o.items.map(i => `<li>${i.qty}x ${esc(i.nama)} (${esc(i.varian)}, ${esc(i.ukuran)})</li>`).join('')}</ul>
+      Metode: ${o.metode}${o.alamat ? '<br>Alamat: ' + esc(o.alamat) : ''}<br>
+      Total: <b>${rp(o.total)}</b>${o.bonus ? ' (bonus ' + o.bonus + ' cup gratis)' : ''}<br>
+      Status pesanan: ${o.status}<br>Pembayaran: ${o.bayar}<br>Email ke sales: ${o.mail ? 'terkirim' : '<b>belum terkirim</b>'}
+      ${o.mail ? '' : `<button class="btn" data-retry="${o.id}">Kirim ulang email</button>`}
+      ${o.bayar === 'Menunggu Pembayaran' ? `<button class="btn o" data-paid="${o.id}">Saya sudah bayar (minta verifikasi)</button>` : ''}
+      <a class="btn wa" target="_blank" rel="noopener" href="${wa(o)}">WhatsApp sales</a></div>`).join('')
+    : '<div class="card">Belum ada pesanan.</div>');
+}
+const list = a => a.length ? '<ul class="card">' + a.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>' : '<div class="card">Belum ada data.</div>';
+const authHTML = `<form id="fLog" class="card"><h3>Login member</h3><input name="email" type="email" placeholder="Email" required><input name="pw" type="password" placeholder="Password" required><button class="btn">Login</button></form>
+<form id="fReg" class="card"><h3>Daftar member baru</h3><input name="name" placeholder="Nama" required><input name="email" type="email" placeholder="Email" required><input name="pw" type="password" placeholder="Password (min. 6 karakter)" required><button class="btn">Daftar</button></form>
+<p class="card"><small>Prototipe lokal: data tersimpan di browser ini saja, bukan sistem login online yang aman.</small></p>`;
+function renderMember() {
+  const u = me(), M = $('#member');
+  if (!u) { M.innerHTML = authHTML; return; }
+  M.innerHTML = `<div class="card pts"><small>Halo, ${esc(u.name)}</small><h1>${u.points} poin</h1>
+    <div class="bar"><i style="width:${Math.min(100, u.points / CFG.biayaReward * 100)}%"></i></div>
+    <small>${CFG.biayaReward} poin = 1 cup gratis (menu reguler, bukan literan). Tiap transaksi +${CFG.poinPerOrder} poin.</small></div>
+    <h3>Tukar reward</h3><div class="grid">${PRODUK.map(p => `<div class="card"><b>${p.nama}</b><button class="btn" data-redeem="${p.id}" ${u.points < CFG.biayaReward ? 'disabled' : ''}>Tukar ${CFG.biayaReward} poin</button></div>`).join('')}</div>
+    <h3>Riwayat transaksi</h3>${list(u.orders.map(o => o.id + ', ' + rp(o.total) + ', ' + fmt(o.time)))}
+    <h3>Riwayat poin</h3>${list(u.plog.slice().reverse().map(l => (l.d > 0 ? '+' : '') + l.d + ' poin, ' + l.note + ', ' + fmt(l.t)))}
+    <h3>Riwayat reward</h3>${list(u.rewards.map(r => r.id + ', 1 cup ' + r.item + ', ' + fmt(r.t)))}
+    <button class="btn o" data-logout>Logout</button>`;
+}
+function renderProfile() {
+  const u = me(), P = $('#profile');
+  if (!u) { P.innerHTML = '<div class="card">Login dulu untuk melihat profil.<button class="btn" data-go="member">Ke halaman Member</button></div>'; return; }
+  P.innerHTML = `<form id="fProf" class="card"><h3>Profil</h3>
+    <label>Nama<input name="name" value="${esc(u.name)}" required></label>
+    <label>Email<input value="${esc(u.email)}" disabled></label>
+    <label>Nomor WhatsApp<input name="phone" value="${esc(u.phone || '')}" inputmode="tel" placeholder="0895..."></label>
+    <button class="btn">Simpan profil</button></form>
+    <button class="btn o" data-logout>Logout</button>`;
+}
+
+/* ===== 8. NAVIGASI TANPA RELOAD ===== */
+function go(p) {
+  if (!['home', 'menu', 'cart', 'orders', 'member', 'profile'].includes(p)) p = 'home';
+  $$('.page').forEach(s => s.classList.toggle('on', s.id === p));
+  $$('nav button').forEach(b => b.classList.toggle('on', b.dataset.go === p));
+  ({ menu: renderMenu, cart: renderCart, orders: renderOrders, member: renderMember, profile: renderProfile }[p] || (() => {}))();
+  scrollTo({ top: 0, behavior: 'smooth' });
+  try { history.replaceState(null, '', '#' + p); } catch (e) {}
+}
+
+/* ===== 9. CHECKOUT ===== */
+let busy = false;
+async function checkout() {
+  const t = hitung(), nama = $('#cName').value.trim(), hp = $('#cPhone').value.replace(/[\s-]/g, ''),
+        m = $('input[name=m]:checked').value, al = $('#cAddr').value.trim();
+  if (!DB.cart.length) return toast('Keranjang kosong');
+  if (DB.cart.some(c => !(info(c).harga > 0))) return toast('Ada produk tanpa harga, hapus dulu');
+  if (nama.length < 2) return toast('Nama minimal 2 huruf');
+  if (!HP.test(hp)) return toast('Nomor WhatsApp tidak valid');
+  if (m === 'Delivery' && (t.unit < CFG.minDelivery || al.length < 5)) return toast('Isi alamat pengantaran dengan lengkap');
+  if (busy) return; busy = true;
+  const o = {
+    id: 'KD' + Date.now().toString(36).toUpperCase() + Math.floor(Math.random() * 900 + 100),
+    time: Date.now(), nama, hp, metode: m, alamat: m === 'Delivery' ? al : '',
+    items: DB.cart.map(c => { const i = info(c); return { nama: i.nama, varian: i.varian, ukuran: i.ukuran, harga: i.harga, qty: c.qty }; }),
+    unit: t.unit, sub: t.sub, bonus: t.bonus, diskon: t.diskon, total: t.total,
+    status: 'Pesanan tercatat', bayar: 'Menunggu Pembayaran', mail: false, poin: false
+  };
+  const u = me(); myOrders().unshift(o);
+  if (u) beriPoin(u, o);            // poin langsung, sekali per ID
+  DB.cart = []; save(); badge(); renderCart();
+  await kirimEmail(o);
+  showResult(o); busy = false;
+}
+
+/* ===== 10. EVENT ===== */
+document.addEventListener('click', async e => {
+  const b = e.target.closest('button,a'); if (!b) return;
+  const d = b.dataset;
+  if (d.go) return go(d.go);
+  if (d.add) { if (tambah({ pid: d.add })) toast('Masuk keranjang ✔'); return; }
+  if (d.buy) { if (tambah({ pid: d.buy })) go('cart'); return; }
+  if (d.lit) {
+    if (tambah({ pid: 'lit', rasa: $('#lr').value, ukuran: $('#lu').value })) { if (d.lit === 'buy') go('cart'); else toast('Masuk keranjang ✔'); }
+    return;
+  }
+  for (const k of ['inc', 'dec', 'del']) if (d[k] !== undefined) {
+    const i = +d[k], c = DB.cart[i]; if (!c) return;
+    if (k === 'inc') c.qty = Math.min(999, c.qty + 1); else if (k === 'dec') c.qty = Math.max(1, c.qty - 1); else DB.cart.splice(i, 1);
+    save(); badge(); return renderCart();
+  }
+  if (d.redeem) return tukar(d.redeem);
+  if (d.retry) {
+    const o = findOrder(d.retry); if (!o) return;
+    b.disabled = true; toast('Mengirim ulang email...');
+    const ok = await kirimEmail(o); toast(ok ? 'Email terkirim ✔' : 'Gagal kirim, coba lagi');
+    if ($('#result').dataset.id === o.id) showResult(o);
+    return renderOrders();
+  }
+  if (d.paid) {
+    const o = findOrder(d.paid);
+    if (o && o.bayar === 'Menunggu Pembayaran') { o.bayar = 'Menunggu Verifikasi'; save(); toast('Menunggu verifikasi sales'); if ($('#result').dataset.id === o.id) showResult(o); renderOrders(); }
+    return;
+  }
+  if (d.logout !== undefined) { DB.session = null; save(); go('home'); }
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.dataset.q !== undefined) { const c = DB.cart[+t.dataset.q], v = parseInt(t.value, 10); if (c) { c.qty = v >= 1 ? Math.min(999, v) : 1; save(); badge(); renderCart(); } }
+  if (t.name === 'm') $('#cAddr').hidden = t.value !== 'Delivery';
+});
+document.addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target, v = new FormData(f);
+  if (f.id === 'coForm') return checkout();
+  if (f.id === 'fReg') {
+    const n = v.get('name').trim(), em = v.get('email').trim().toLowerCase(), pw = v.get('pw');
+    if (n.length < 2 || !/^\S+@\S+\.\S+$/.test(em) || pw.length < 6) return toast('Isi nama, email valid, dan password min. 6 karakter');
+    if (DB.users[em]) return toast('Email sudah terdaftar, silakan login');
+    const salt = Math.random().toString(36).slice(2);
+    DB.users[em] = { name: n, email: em, phone: '', salt, hash: await hash(salt + pw), points: 0, plog: [], orders: [], rewards: [] };
+    DB.session = em; save(); renderMember(); toast('Registrasi berhasil ✔');
+  }
+  if (f.id === 'fLog') {
+    const em = v.get('email').trim().toLowerCase(), u = DB.users[em];
+    if (!u || u.hash !== await hash(u.salt + v.get('pw'))) return toast('Email atau password salah');
+    DB.session = em; save(); renderMember(); toast('Selamat datang, ' + u.name);
+  }
+  if (f.id === 'fProf') {
+    const u = me(), n = v.get('name').trim(), hp = v.get('phone').replace(/[\s-]/g, '');
+    if (n.length < 2) return toast('Nama minimal 2 huruf');
+    if (hp && !HP.test(hp)) return toast('Nomor WhatsApp tidak valid');
+    u.name = n; u.phone = hp; save(); toast('Profil disimpan ✔');
+  }
+});
+
+/* ===== 11. MULAI ===== */
+const net = () => { $('#offline').hidden = navigator.onLine; };
+addEventListener('online', net); addEventListener('offline', net); net();
+badge(); go(location.hash.slice(1) || 'home');
+setTimeout(() => $('#loader').classList.add('off'), 1800);
+
+</script>
+</body>
+</html>
